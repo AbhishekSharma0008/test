@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        body {  
+    font-family: Arial, sans-serif;  
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+    height: 100vh;  
+    background-color: olive;  
+}  
+
+.container {  
+    background: rgb(225, 207, 152);  
+    padding: 20px;  
+    border-radius: 8px;  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
+    text-align: center;  
+}  
+
+.joke {  
+    margin: 20px 0;  
+    font-size: 1.2em;  
+}  
+
+button {  
+    margin: 5px;  
+    padding: 10px 15px;  
+    border: none;  
+    border-radius: 5px;  
+
+}  
+
+button:hover {  
+    background-color: rgb(253, 253, 253);  
+    cursor: pointer;
+}  
+
+#clearjoke {  
+    background-color: red;  
+    color: white;  
+   
+}  
+
+#getjoke {  
+    background-color: beige;  
+    color: black;  
+
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+      <h1>Random Joke Generator</h1>
+      <div id="joke" class="joke">Press the button for a joke!</div>
+      <div class="character-count">Character count: <span id="charCount">0</span></div>
+      <button id="getjoke">Get Joke</button>
+      <button id="clearjoke">Clear Joke</button>
+    </div>
+    <script>
+      document.getElementById('getjoke').addEventListener('click', fetchJoke);
+      document.getElementById('clearjoke').addEventListener('click', clearJoke);
+  
+      function fetchJoke() {
+        fetch('https://v2.jokeapi.dev/joke/Any')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            let jokeText = data.joke;
+            if (!jokeText) {
+              jokeText = `${data.setup} 
+  ... ${data.delivery}`;
+            }
+            document.getElementById('joke').textContent = jokeText;
+            document.getElementById('charCount').textContent = jokeText.length;
+          })
+          .catch(error => {
+            document.getElementById('joke').textContent = 'Failed to fetch a joke. Please try again.';
+            document.getElementById('charCount').textContent = '0';
+            console.error('There was a problem with the fetch operation:', error);
+          });
+      }
+  
+      function clearJoke() {
+        document.getElementById('joke').textContent = 'Press the button for a joke!';
+        document.getElementById('charCount').textContent = '0';
+      }
+    </script>
+  </body>
+
+</html>
